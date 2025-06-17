@@ -23,3 +23,15 @@ O serviço ficará disponível na porta padrão `5432` com as seguintes credenci
 
 O script `init.sql` será executado automaticamente na primeira inicialização para criar as tabelas.
 
+
+## Backend Node.js
+
+O diretório `src` contém uma API criada com Express seguindo o padrão MVC.
+Para instalar as dependências e iniciar o servidor execute:
+
+```bash
+npm install
+npm run dev
+```
+
+Por padrão a API escuta na porta `3000`.
