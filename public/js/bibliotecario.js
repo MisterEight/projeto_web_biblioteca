@@ -35,17 +35,19 @@ async function carregarEmprestimos() {
   const emprestimos = await resp.json();
   const tbody = document.querySelector('#emprestimosTable tbody');
   tbody.innerHTML = '';
-  emprestimos.filter(e => e.status === 'ativo').forEach(e => {
+  for (const e of emprestimos.filter(emp => emp.status !== 'devolvido')) {
+    const usuarioResp = await fetch(`/usuarios/${e.leitor_id}`, { headers });
+    const usuario = await usuarioResp.json();
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${e.leitor_id}</td>
+      <td>${usuario.nome}</td>
       <td>${e.livro_id}</td>
       <td>${new Date(e.data_emprestimo).toLocaleDateString()}</td>
       <td>${new Date(e.data_devolucao_prevista).toLocaleDateString()}</td>
       <td><button onclick="devolver(${e.id})">Devolver</button></td>
     `;
     tbody.appendChild(tr);
-  });
+  }
 }
 
 async function adicionarLivro(event) {

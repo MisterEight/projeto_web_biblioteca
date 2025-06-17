@@ -40,7 +40,7 @@ async function carregarEmprestimosLeitor() {
       <td>${new Date(e.data_emprestimo).toLocaleDateString()}</td>
       <td>${new Date(e.data_devolucao_prevista).toLocaleDateString()}</td>
       <td>${e.status}</td>
-      <td><button onclick="solicitarDevolucao(${e.id})">Devolver</button></td>
+      <td>${e.status === 'ativo' ? `<button onclick="solicitarDevolucao(${e.id})">Devolver</button>` : ''}</td>
     `;
     tbody.appendChild(tr);
   }
@@ -59,7 +59,7 @@ async function emprestar(id) {
 }
 
 async function solicitarDevolucao(id) {
-  await fetch(`/emprestimos/${id}/devolver`, { method: 'PUT', headers: headersL });
+  await fetch(`/emprestimos/${id}/solicitar-devolucao`, { method: 'PUT', headers: headersL });
   carregarCatalogo();
   carregarEmprestimosLeitor();
 }
