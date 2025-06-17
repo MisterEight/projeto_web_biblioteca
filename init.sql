@@ -26,5 +26,5 @@ CREATE TABLE IF NOT EXISTS emprestimos (
     data_emprestimo DATE NOT NULL,
     data_devolucao_prevista DATE NOT NULL,
     data_devolucao_real DATE,
-    status VARCHAR(20) NOT NULL CHECK (status IN ('ativo', 'devolvido', 'atrasado'))
+    status VARCHAR(20) NOT NULL CHECK (status IN ('ativo', 'pendente', 'devolvido', 'atrasado'))
 );

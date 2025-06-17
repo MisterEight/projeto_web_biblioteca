@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.get('/', auth, EmprestimoController.listar);
 router.post('/', auth, authorize(['leitor']), EmprestimoController.criar);
+router.put('/:id/solicitar-devolucao', auth, authorize(['leitor']), EmprestimoController.solicitarDevolucao);
 router.put('/:id/devolver', auth, authorize(['bibliotecario']), EmprestimoController.devolver);
 
 module.exports = router;
