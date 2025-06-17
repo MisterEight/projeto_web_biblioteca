@@ -47,3 +47,13 @@ async function login(event) {
 
 document.getElementById('registerForm').addEventListener('submit', registrar);
 document.getElementById('loginForm').addEventListener('submit', login);
+
+document.getElementById('toRegister').addEventListener('click', () => {
+  document.getElementById('loginSection').classList.add('hidden');
+  document.getElementById('registerSection').classList.remove('hidden');
+});
+
+document.getElementById('toLogin').addEventListener('click', () => {
+  document.getElementById('registerSection').classList.add('hidden');
+  document.getElementById('loginSection').classList.remove('hidden');
+});

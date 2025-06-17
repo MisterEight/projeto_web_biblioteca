@@ -1,4 +1,11 @@
 const token = localStorage.getItem('token');
+if (!token) {
+  window.location.href = 'index.html';
+}
+const payloadB = JSON.parse(atob(token.split('.')[1]));
+if (payloadB.perfil !== 'bibliotecario') {
+  window.location.href = 'index.html';
+}
 const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token };
 
 async function carregarLivros() {
@@ -28,7 +35,7 @@ async function carregarEmprestimos() {
   const emprestimos = await resp.json();
   const tbody = document.querySelector('#emprestimosTable tbody');
   tbody.innerHTML = '';
-  emprestimos.forEach(e => {
+  emprestimos.filter(e => e.status === 'ativo').forEach(e => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${e.leitor_id}</td>
@@ -70,15 +77,39 @@ async function excluirLivro(id) {
 }
 
 async function editarLivro(id) {
-  const titulo = prompt('Novo título:');
-  if (!titulo) return;
-  const autor = prompt('Novo autor:');
-  const ano = prompt('Novo ano:');
-  const quantidade = prompt('Nova quantidade:');
+  const livroResp = await fetch(`/livros/${id}`, { headers });
+  const livro = await livroResp.json();
+  const campo = prompt('Campo a editar (titulo, autor, ano, quantidade):');
+  if (!campo) return;
+  const valor = prompt('Novo valor:');
+  if (valor === null) return;
+  const data = {
+    titulo: livro.titulo,
+    autor: livro.autor,
+    ano_publicacao: livro.ano_publicacao,
+    quantidade_disponivel: livro.quantidade_disponivel
+  };
+  switch (campo) {
+    case 'titulo':
+      data.titulo = valor;
+      break;
+    case 'autor':
+      data.autor = valor;
+      break;
+    case 'ano':
+      data.ano_publicacao = parseInt(valor);
+      break;
+    case 'quantidade':
+      data.quantidade_disponivel = parseInt(valor);
+      break;
+    default:
+      alert('Campo inválido');
+      return;
+  }
   await fetch(`/livros/${id}`, {
     method: 'PUT',
     headers,
-    body: JSON.stringify({ titulo, autor, ano_publicacao: parseInt(ano), quantidade_disponivel: parseInt(quantidade) })
+    body: JSON.stringify(data)
   });
   carregarLivros();
 }

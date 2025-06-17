@@ -10,38 +10,44 @@
   <div class="container">
     <h1>Biblioteca</h1>
 
-    <h2>Registro</h2>
-    <form id="registerForm">
-      <label for="nome">Nome</label>
-      <input type="text" id="nome" required>
+    <div id="loginSection">
+      <h2>Login</h2>
+      <form id="loginForm">
+        <label for="emailLogin">Email</label>
+        <input type="email" id="emailLogin" required>
 
-      <label for="emailRegistro">Email</label>
-      <input type="email" id="emailRegistro" required>
+        <label for="senhaLogin">Senha</label>
+        <input type="password" id="senhaLogin" required>
 
-      <label for="senhaRegistro">Senha</label>
-      <input type="password" id="senhaRegistro" required>
+        <button type="submit">Entrar</button>
+        <div id="loginMessage"></div>
+      </form>
+      <button id="toRegister" type="button">Criar conta</button>
+    </div>
 
-      <label for="perfil">Perfil</label>
-      <select id="perfil">
-        <option value="bibliotecario">Bibliotecário</option>
-        <option value="leitor">Leitor</option>
-      </select>
+    <div id="registerSection" class="hidden">
+      <h2>Registro</h2>
+      <form id="registerForm">
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" required>
 
-      <button type="submit">Registrar</button>
-      <div id="registerMessage"></div>
-    </form>
+        <label for="emailRegistro">Email</label>
+        <input type="email" id="emailRegistro" required>
 
-    <h2>Login</h2>
-    <form id="loginForm">
-      <label for="emailLogin">Email</label>
-      <input type="email" id="emailLogin" required>
+        <label for="senhaRegistro">Senha</label>
+        <input type="password" id="senhaRegistro" required>
 
-      <label for="senhaLogin">Senha</label>
-      <input type="password" id="senhaLogin" required>
+        <label for="perfil">Perfil</label>
+        <select id="perfil">
+          <option value="bibliotecario">Bibliotecário</option>
+          <option value="leitor">Leitor</option>
+        </select>
 
-      <button type="submit">Entrar</button>
-      <div id="loginMessage"></div>
-    </form>
+        <button type="submit">Registrar</button>
+        <div id="registerMessage"></div>
+      </form>
+      <button id="toLogin" type="button">Já tenho conta</button>
+    </div>
   </div>
 
   <script src="js/index.js"></script>

@@ -1,4 +1,11 @@
 const tokenL = localStorage.getItem('token');
+if (!tokenL) {
+  window.location.href = 'index.html';
+}
+const payloadL = JSON.parse(atob(tokenL.split('.')[1]));
+if (payloadL.perfil !== 'leitor') {
+  window.location.href = 'index.html';
+}
 const headersL = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tokenL };
 
 async function carregarCatalogo() {
@@ -9,7 +16,6 @@ async function carregarCatalogo() {
   livros.forEach(l => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${l.id}</td>
       <td>${l.titulo}</td>
       <td>${l.autor}</td>
       <td>${l.ano_publicacao}</td>
@@ -25,16 +31,19 @@ async function carregarEmprestimosLeitor() {
   const emprestimos = await resp.json();
   const tbody = document.querySelector('#meusEmprestimosTable tbody');
   tbody.innerHTML = '';
-  emprestimos.forEach(e => {
+  for (const e of emprestimos) {
+    const livroResp = await fetch(`/livros/${e.livro_id}`, { headers: headersL });
+    const livro = await livroResp.json();
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${e.livro_id}</td>
+      <td>${livro.titulo}</td>
+      <td>${new Date(e.data_emprestimo).toLocaleDateString()}</td>
       <td>${new Date(e.data_devolucao_prevista).toLocaleDateString()}</td>
       <td>${e.status}</td>
       <td><button onclick="solicitarDevolucao(${e.id})">Devolver</button></td>
     `;
     tbody.appendChild(tr);
-  });
+  }
 }
 
 async function emprestar(id) {
