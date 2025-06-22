@@ -20,6 +20,7 @@ const EmprestimoController = {
 
   async listar(req, res) {
     try {
+      await Emprestimo.marcarAtrasados();
       const emprestimos = await Emprestimo.listarPorUsuario(req.user);
       res.json(emprestimos);
     } catch (err) {
@@ -52,6 +53,15 @@ const EmprestimoController = {
       res.json(atualizado);
     } catch (err) {
       res.status(500).json({ message: 'Erro ao devolver livro', error: err.message });
+    }
+  },
+
+  async remover(req, res) {
+    try {
+      await Emprestimo.remover(req.params.id);
+      res.status(204).end();
+    } catch (err) {
+      res.status(500).json({ message: 'Erro ao remover empréstimo', error: err.message });
     }
   }
 };

@@ -31,6 +31,19 @@ const Emprestimo = {
       [status, data_devolucao_real, id]
     );
     return result.rows[0];
+  },
+
+  async remover(id) {
+    await pool.query('DELETE FROM emprestimos WHERE id=$1', [id]);
+  },
+
+  async marcarAtrasados() {
+    await pool.query(
+      "UPDATE emprestimos SET status='atrasado' " +
+        "WHERE status IN ('ativo','pendente') " +
+        "AND data_devolucao_prevista < CURRENT_DATE " +
+        "AND data_devolucao_real IS NULL"
+    );
   }
 };
 
