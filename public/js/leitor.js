@@ -40,7 +40,7 @@ async function carregarEmprestimosLeitor() {
       <td>${new Date(e.data_emprestimo).toLocaleDateString()}</td>
       <td>${new Date(e.data_devolucao_prevista).toLocaleDateString()}</td>
       <td>${e.status}</td>
-      <td>${e.status === 'ativo' ? `<button onclick="solicitarDevolucao(${e.id})">Devolver</button>` : ''}</td>
+      <td>${e.status === 'ativo' ? `<button onclick="solicitarDevolucao(${e.id}, this)">Devolver</button>` : ''}</td>
     `;
     tbody.appendChild(tr);
   }
@@ -58,10 +58,15 @@ async function emprestar(id) {
   carregarEmprestimosLeitor();
 }
 
-async function solicitarDevolucao(id) {
-  await fetch(`/emprestimos/${id}/solicitar-devolucao`, { method: 'PUT', headers: headersL });
-  carregarCatalogo();
-  carregarEmprestimosLeitor();
+async function solicitarDevolucao(id, btn) {
+  const resp = await fetch(`/emprestimos/${id}/solicitar-devolucao`, { method: 'PUT', headers: headersL });
+  if (resp.ok && btn) {
+    const statusCell = btn.parentElement.previousElementSibling;
+    if (statusCell) statusCell.textContent = 'pendente';
+    btn.remove();
+  } else {
+    carregarEmprestimosLeitor();
+  }
 }
 
 carregarCatalogo();
