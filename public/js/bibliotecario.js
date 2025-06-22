@@ -44,7 +44,10 @@ async function carregarEmprestimos() {
       <td>${e.livro_id}</td>
       <td>${new Date(e.data_emprestimo).toLocaleDateString()}</td>
       <td>${new Date(e.data_devolucao_prevista).toLocaleDateString()}</td>
-      <td><button onclick="devolver(${e.id})">Devolver</button></td>
+      <td>
+        <button onclick="devolver(${e.id})">Devolver</button>
+        <button onclick="cancelarEmprestimo(${e.id})">Cancelar</button>
+      </td>
     `;
     tbody.appendChild(tr);
   }
@@ -118,6 +121,13 @@ async function editarLivro(id) {
 
 async function devolver(id) {
   await fetch(`/emprestimos/${id}/devolver`, { method: 'PUT', headers });
+  carregarEmprestimos();
+  carregarLivros();
+}
+
+async function cancelarEmprestimo(id) {
+  if (!confirm('Cancelar empréstimo?')) return;
+  await fetch(`/emprestimos/${id}`, { method: 'DELETE', headers });
   carregarEmprestimos();
   carregarLivros();
 }
