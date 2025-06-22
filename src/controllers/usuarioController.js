@@ -30,6 +30,17 @@ const UsuarioController = {
       res.status(500).json({ message: 'Erro no login', error: err.message });
     }
   }
+  ,
+  async obter(req, res) {
+    try {
+      const usuario = await Usuario.buscarPorId(req.params.id);
+      if (!usuario) return res.status(404).json({ message: 'Usuário não encontrado' });
+      delete usuario.senha;
+      res.json(usuario);
+    } catch (err) {
+      res.status(500).json({ message: 'Erro ao obter usuário', error: err.message });
+    }
+  }
 };
 
 module.exports = UsuarioController;

@@ -27,10 +27,23 @@ const EmprestimoController = {
     }
   },
 
+  async solicitarDevolucao(req, res) {
+    try {
+      const emprestimo = await Emprestimo.buscarPorId(req.params.id);
+      if (!emprestimo || emprestimo.leitor_id !== req.user.id || emprestimo.status !== 'ativo') {
+        return res.status(400).json({ message: 'Empréstimo inválido' });
+      }
+      const atualizado = await Emprestimo.atualizarStatus(emprestimo.id, 'pendente', null);
+      res.json(atualizado);
+    } catch (err) {
+      res.status(500).json({ message: 'Erro ao solicitar devolução', error: err.message });
+    }
+  },
+
   async devolver(req, res) {
     try {
       const emprestimo = await Emprestimo.buscarPorId(req.params.id);
-      if (!emprestimo || emprestimo.status !== 'ativo') {
+      if (!emprestimo || (emprestimo.status !== 'ativo' && emprestimo.status !== 'pendente')) {
         return res.status(400).json({ message: 'Empréstimo inválido' });
       }
       const livro = await Livro.buscarPorId(emprestimo.livro_id);
